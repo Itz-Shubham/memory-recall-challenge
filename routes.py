@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, session, redirect, request
-from flask_login import login_required, login_user,logout_user, current_user, user_unauthorized
+from flask_login import login_required, login_user,logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from datetime import datetime, timedelta
-from models import db, User, PasswordResetToken
+from models import db, User, PasswordResetToken, Score
 from fuctions import send_forget_password_mail
 
 routes = Blueprint('route', __name__)
@@ -130,6 +130,7 @@ def change_password():
 @routes.route('/logout')
 def logout():
     logout_user()
+    if session.get('skipped_login'): session.clear()
     return redirect('/')
 
 @routes.route('/')
