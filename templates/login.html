@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    {% if 'error_messages' %}
+        {{ error_messages }}
+    {% endif %}
+    <form method="post">
+        <input type="email" placeholder="Email" name="email">
+        <input type="password" placeholder="Password", name="password">
+        <input type="submit">
+        <input type="submit" value="Skip Login", name="skip-login">
+    </form>
+    <a href="/forget-password">Forget Password</a>
+    <br>
+    <a href="/register">Register Page</a>
+</head>
+<body>
+    
+</body>
+</html>

@@ -3,5 +3,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Python Enviroment
-*.env
+# Python Environment Folder
+*.venv
+
+# SQLite Generated Database Folder
+*instance
+
+# Environment File
+.env
+
+# Mac clutters
+.DS_Store
