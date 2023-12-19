@@ -1,24 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simon Says Game</title>
-    <link rel="stylesheet" href="/static/style.css" />
-  </head>
-  <body>
-    <h1>Simon Game</h1>
-    <h2>Press any key to start the game</h2>
-    <div class="btn-container">
-      <div class="line-one">
-        <div class="btn red" type="button" id="red"></div>
-        <div class="btn yellow" type="button" id="yellow"></div>
-      </div>
-      <div class="line-two">
-        <div class="btn green" type="button" id="green"></div>
-        <div class="btn purple" type="button" id="purple"></div>
-      </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simon Says Game</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+  <h1>Simon Game</h1>
+  <h2>Press any key to start the game</h2>
+  <div class="btn-container">
+    <div class="line-one">
+      <div class="btn red" type="button" id="red"></div>
+      <div class="btn yellow" type="button" id="yellow"></div>
     </div>
-    <script src="/static/app.js"></script>
-  </body>
+    <div class="line-two">
+      <div class="btn green" type="button" id="green"></div>
+      <div class="btn purple" type="button" id="purple"></div>
+    </div>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+  integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+  var socket = io();
+  // console.log(session['room'])
+  socket.on('message', function (a) {
+    console.log(a)
+  })
+  // socket.on('connect', function() {
+  //     socket.emit('my event', {data: 'I\'m connected!'});
+  // });
+
+</script>
+
 </html>

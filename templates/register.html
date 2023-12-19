@@ -1,21 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    {% if 'error_messages' %}
-        {{ error_messages }}
-    {% endif %}
-    <form method="post">
-        <input type="text" placeholder="name" name="name">
-        <input type="email" placeholder="Email" name="email">
-        <input type="password" placeholder="Password", name="password">
-        <input type="submit">
-    </form>
-    <a href="/login">Login Page</a>
-</head>
-<body>
-    
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+
+<div class="form-page">
+    <div class="form-box">
+        <div class="register">
+            <h2>Register</h2>
+            <form method="post">
+                {% if error_messages and error_messages.error %}
+                <div class="error-message">{{ error_messages.error }}</div>
+                {% endif %}
+                <div class="input-box">
+                    <!-- <span class="icon"><img src="email.png" /></span> -->
+                    <input type="name" name="name" required />
+                    <label>Name</label>
+                </div>
+                {% if error_messages and error_messages.name %}
+                <p class="input-error">{{ error_messages.name }}</p>
+                {% endif %}
+                <div class="input-box">
+                    <!-- <span class="icon"><img src="email.png" /></span> -->
+                    <input type="email" name="email" required />
+                    <label>Email</label>
+
+                </div>
+                {% if error_messages and error_messages.email %}
+                <p class="input-error">{{ error_messages.email }}</p>
+                {% endif %}
+                <div class="input-box">
+                    <!-- <span class="icon"><img src="password.png" /></span> -->
+                    <input type="password" name="password" required />
+                    <label>Password</label>
+                </div>
+                {% if error_messages and error_messages.password %}
+                <p class="input-error">{{ error_messages.password }}</p>
+                {% endif %}
+                <button type="submit" class="submit-button">Register</button>
+            </form>
+            <div class="login-register-link">
+                <p>
+                    Already have an account?
+                    <a href="{{ url_for('route.login') }}">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

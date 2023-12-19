@@ -1,8 +1,298 @@
-/* *{
+:root {
+    --primary-color: #afeeee;
+    --secondary-color: #162938;
+    --text-color: #000000;
+    --border-color: #000000;
+    --button-foreground-color: #ffffff;
+    --button-background-color: #162938;
+    --link-color: #162938;
+    --error-color: #ff4500;
+}
+
+* {
     margin: 0;
     padding: 0;
-} */
-body{
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    min-height: 100vh;
+    background-color: var(--primary-color);
+    /* background: url(background.jpg) no-repeat; */
+    /* background-size: cover;
+    background-position: center; */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* z-index: 99; */
+}
+
+.logo {
+    font-size: 1.4em;
+    color: var(--text-color);
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    max-width: 50px;
+    padding-right: 10px;
+}
+
+.navigation a {
+    position: relative;
+    font-size: 1.2em;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 40px;
+}
+
+.navigation a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    left: 0;
+    bottom: -6px;
+    background: var(--border-color);
+    border-radius: 5px;
+    transform-origin: right;
+    transform: scalex(0);
+    transition: transform .5s;
+}
+
+.navigation a:hover::after {
+    transform: scalex(1);
+    transform-origin: left;
+}
+
+.navigation .login-button {
+    width: 130px;
+    height: 50px;
+    background: transparent;
+    border: 2px solid var(--button-background-color);
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: var(--button-background-color);
+    font-weight: 500;
+    margin-left: 40px;
+    transition: .5s;
+}
+
+.navigation .login-button:hover {
+    background: var(--button-background-color);
+    color: var(--button-foreground-color);
+}
+
+.icon {
+    height: 17px;
+    width: 18px;
+}
+
+.form-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.form-box {
+    width: 440px;
+    padding-top: 40px;
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-bottom: 40px;
+    position: relative;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .5);
+    border-radius: 20px;
+    /* backdrop-filter: blur(20px); */
+    box-shadow: 0 0 30px rbga(0, 0, 0, .5);
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+
+.error-message {
+    padding-top: 30px;
+    position: relative;
+    text-align: center;
+
+    color: var(--error-color);
+}
+
+.form-box h2 {
+    font-size: 2em;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.form-box .info {
+    padding-top: 10px;
+    text-align: center;
+    display: flex;
+}
+
+.input-box {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    border-bottom: 2px solid var(--border-color);
+    margin-top: 30px;
+}
+
+.input-box label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 1em;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: .5s;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label {
+    top: -5px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    box-shadow: 0 0 0 30px var(--primary-color) inset;
+}
+
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1.1em;
+    color: var(--text-color);
+    font-weight: 600;
+    padding: 0 35px 0;
+}
+
+.input-error {
+    color: var(--error-color);
+    font-size: 0.75em;
+    margin-top: 10px;
+    /* position: ; */
+    left: 5px;
+}
+
+.input-box .icon {
+    /* position: absolute; */
+    right: 8px;
+    color: var(--secondary-color);
+    line-height: 57px;
+}
+
+.forget-password-text {
+    font-size: .9em;
+    color: var(--link-color);
+    font-weight: 500;
+    padding-top: 15px;
+    display: flex;
+    justify-content: end;
+}
+
+.forget-password-text a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: .5s;
+}
+
+.forget-password-text a:hover {
+    text-decoration: underline;
+}
+
+.form-box .submit-button {
+    margin-top: 30px;
+}
+
+.submit-button {
+    width: 100%;
+    height: 40px;
+    background-color: var(--button-background-color);
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--button-foreground-color);
+    font-size: 1em;
+    font-weight: 500;
+}
+
+.submit-button-outline {
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    border: 2px solid var(--button-background-color);
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    color: var(--button-background-color);
+    font-weight: 500;
+    transition: .5s;
+    margin-top: 10px;
+}
+
+.submit-button-outline:hover {
+    background: var(--button-background-color);
+    color: var(--button-foreground-color);
+}
+
+.login-register-link {
+    font-size: .9em;
+    color: var(--secondary-color);
+    text-align: center;
+    font-weight: 500;
+    margin: 25px 0 10px;
+}
+
+.login-register-link p a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+
+}
+
+.login-register-link a:hover {
+    text-decoration: underline;
+}
+
+.email-sent {
+    text-align: center;
+}
+
+.email-sent .icon {
+    height: 100px;
+    width: 100px;
+    padding-bottom: 20px;
+}
+
+/* ===================================================================================== */
+
+/* body{
     text-align: center;
     background-color: rgba(210, 192, 184, 0.811);
 }
@@ -42,4 +332,4 @@ body{
 
 .userflash{
     background-color: rgb(97, 176, 176);
-}
+} */
