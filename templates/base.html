@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
-    {% block stylesheet %}
+    {% block stylesheets %}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
     {% endblock %}
 </head>
@@ -17,16 +17,29 @@
             <h2 class="logo">MemoryMastermind</h2>
         </div>
         <nav class="navigation">
-            <a href="/">Home</a>
-            <a href="">About</a>
-            <a href="">Contact Us</a>
-            <!-- <button class="login-button">Login</button> -->
+            {% if request.url_rule | string() != '/'%}
+            <a href="/" class="nav-item">Home</a>
+            {% endif %}
+            <a href="" class="nav-item">About</a>
+            <a href="" class="nav-item">Contact Us</a>
+            {% if current_user.is_anonymous and request.url_rule | string() == '/' %}
+            <a href="/login" class="login-button">Login</a>
+            {% elif current_user.is_authenticated and request.url_rule | string() != '/profile'%}
+            <a href="/profile">
+                <img class="nav-user-photo"
+                    src="{% if current_user.profile_picture %}{{ current_user.profile_picture }}{% else %}{{ url_for('static', filename='assets/default-profile.png')}}{% endif %}"
+                    alt="" srcset="">
+            </a>
+            {% elif current_user.is_authenticated and request.url_rule | string() == '/profile'%}
+            <a href="/logout" class="logout-button">Logout</a>
+            {% endif %}
         </nav>
     </header>
     {% block content %}
     {% endblock %}
 
 </body>
-    {% block script %}
-    {% endblock %}
+{% block scripts %}
+{% endblock %}
+
 </html>

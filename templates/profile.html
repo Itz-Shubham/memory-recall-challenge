@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Playground{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="form-page">
+    <form method="post" style="width: 400px;" enctype="multipart/form-data">
+        <div class="profile-upload">
+            <div class="avatar-upload">
+                <div class="avatar-edit">
+                    <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" name="profile_picture" />
+                    <label for="imageUpload"></label>
+                </div>
+                <div class="avatar-preview">
+                    <div id="imagePreview" style="background-image: url('{% if current_user.profile_picture %}{{ current_user.profile_picture }}{% else %}{{ url_for('static', filename='assets/default-profile.png')}}{% endif %}');">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="input-box">
+            <input type="name" name="name" value="{{ current_user.name }}" required />
+            <label>Name</label>
+        </div>
+        {% if error_messages and error_messages.name %}
+        <p class="input-error">{{ error_messages.name }}</p>
+        {% endif %}
+        <div class="input-box">
+            <input type="email" name="email" value="{{ current_user.email }}" required />
+            <label>Email</label>
+        </div>
+        {% if error_messages and error_messages.email %}
+        <p class="input-error">{{ error_messages.email }}</p>
+        {% endif %}
+        <div style="padding: 20px;">
+            <button type="submit" class="submit-button">Update Profile</button>
+            <a href="/change-password">
+                <input type="button" class="submit-button-outline" style="margin-top: 20px;" value="Change Password">
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                console.log(e)
+                $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+                $('#imagePreview').hide();
+                $('#imagePreview').fadeIn(650);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#imageUpload").change(function () {
+        readURL(this);
+    });
+</script>
+{% endblock %}

@@ -1,7 +1,7 @@
 from flask import session
 from flask_login import current_user
 from flask_socketio import SocketIO, join_room, leave_room, send
-from models import db, Score
+from models import db
 from string import ascii_uppercase
 import random
 
@@ -35,13 +35,12 @@ def submit_colors(colors):
         send(jsonMessage('game_over', None))
         if current_user.is_authenticated:
             new_score = len(session['game_seq'])-1
-            score = Score.query.filter_by(user_id=current_user.id).first()
-            if not score:
-                score = Score(user_id=current_user.id, attempts=1, high_score=new_score)
-            elif score and score.high_score < new_score:
-                score.high_score = new_score
-                score.attempts+=1
-            db.session.add(score)
+            if not current_user.high_score:
+                current_user.high_score = new_score
+            elif current_user.high_score < new_score:
+                current_user.high_score = new_score
+                current_user.attempts+=1
+            db.session.add(current_user)
             db.session.commit()
         session['game_seq'] = []
 

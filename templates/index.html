@@ -1,41 +1,138 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block title %}Playground{% endblock %}
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simon Says Game</title>
-  <link rel="stylesheet" href="/static/style.css" />
-</head>
-
-<body>
-  <h1>Simon Game</h1>
-  <h2>Press any key to start the game</h2>
-  <div class="btn-container">
-    <div class="line-one">
-      <div class="btn red" type="button" id="red"></div>
-      <div class="btn yellow" type="button" id="yellow"></div>
+{% block content %}
+<div class="main">
+  <div class="leaderboard">
+    <div class="title">
+      <h2>Leaderboard</h2>
     </div>
-    <div class="line-two">
-      <div class="btn green" type="button" id="green"></div>
-      <div class="btn purple" type="button" id="purple"></div>
+    {% if top3users %}
+    <div class="top-users">
+      <div class="user-details">
+        <img class="user-photo"
+          src="{% if top3users[1].profile_picture %}{{ top3users[1].profile_picture }}{% else %}{{ url_for('static', filename='assets/default-profile.png')}}{% endif %}">
+        <p class="user-name">{{ top3users[1].name }}</p>
+        <p class="user-score">Score: {{ top3users[1].high_score }}</p>
+      </div>
+      <div class="user-details" style="margin-bottom: 18px;">
+        <img class="user-photo"
+          src="{% if top3users[0].profile_picture %}{{ top3users[0].profile_picture }}{% else %}{{ url_for('static', filename='assets/default-profile.png')}}{% endif %}"
+          style="width: 100px; height: 100px;">
+        <p class="user-name">{{ top3users[0].name }}</p>
+        <p class="user-score">Score: {{ top3users[0].high_score }}</p>
+      </div>
+      <div class="user-details">
+        <img class="user-photo"
+          src="{% if top3users[2].profile_picture %}{{ top3users[2].profile_picture }}{% else %}{{ url_for('static', filename='assets/default-profile.png')}}{% endif %}">
+        <p class="user-name">{{ top3users[2].name }}</p>
+        <p class="user-score">Score: {{ top3users[2].high_score }}</p>
+      </div>
+    </div>
+    {% else %}
+    <div style="height: 20px;"></div>
+    {% endif %}
+    <ul class="leaderboard-list">
+      {% for user in users %}
+      <li class="user-tile">
+        <p class="user-rank">{{ loop.index }}</p>
+        <img class="user-photo"
+          src="{% if user.profile_picture %}{{ user.profile_picture }}{% else %}{{ url_for('static', filename='assets/default-profile.png')}}{% endif %}">
+        <div class="column">
+          <p class="user-name">{{ user.name }}</p>
+          <p class="user-score">Score: {{ user.high_score }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+  </div>
+  <div class="playground">
+    <div class="">
+      <h2 class="score-board">Welcome! Press start button to play.</h2>
+      <div class="game-area">
+        <div class="line-one">
+          <div class="color-box red" type="button" id="red" onclick="submitColor('RED')"></div>
+          <div class="color-box yellow" type="button" id="yellow" onclick="submitColor('YELLOW')"></div>
+        </div>
+        <div class="line-two">
+          <div class="color-box purple" type="button" id="purple" onclick="submitColor('PURPLE')"></div>
+          <div class="color-box green" type="button" id="green" onclick="submitColor('GREEN')"></div>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <span class='game-action-start-btn' onclick="startGame()">Start Game</span>
+        <span class='game-action-cancel-btn' onclick="cancelGame()">Cancel</span>
+        <span class='game-action-restart-btn' onclick="restartGame()">Restart</span>
+      </div>
     </div>
   </div>
-  <script src="/static/app.js"></script>
-</body>
+</div>
+{% endblock %}
+
+{% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
   integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
   crossorigin="anonymous"></script>
 <script type="text/javascript" charset="utf-8">
-  var socket = io();
-  // console.log(session['room'])
-  socket.on('message', function (a) {
-    console.log(a)
-  })
-  // socket.on('connect', function() {
-  //     socket.emit('my event', {data: 'I\'m connected!'});
-  // });
+  let socket = null;
+  let user_seq = [];
+  let current_level = 1;
+
+  function startGame() {
+    document.getElementsByClassName('game-action-start-btn')[0].style.display = "none";
+    socket = io();
+    socket.on('message', function (data) {
+      if (data['game_status'] == 'start') {
+        document.getElementsByClassName('score-board')[0].innerHTML = 'Score: 0'
+        blinkColorBox(data['new_color'])
+      }
+      else if (data['game_status'] == 'level_up') {
+        current_level = data['current_level'];
+        document.getElementsByClassName('score-board')[0].innerHTML = `Scrore: ${current_level - 1}`
+        blinkColorBox(data['new_color'])
+      }
+      else if (data['game_status'] == 'game_over') {
+        user_seq = [];
+        current_level = 1;
+        document.getElementsByClassName('score-board')[0].innerHTML = 'Game Over!'
+        document.getElementsByClassName('game-action-cancel-btn')[0].style.display = "inline-block";
+        document.getElementsByClassName('game-action-restart-btn')[0].style.display = "inline-block";
+      }
+    })
+  }
+
+  function submitColor(color) {
+    if (socket != null) {
+      user_seq.push(color)
+      if (user_seq.length == current_level) {
+        socket.emit('submit_colors', user_seq)
+        user_seq = []
+      }
+    }
+  }
+
+  function blinkColorBox(color_name) {
+    let a = document.getElementsByClassName(`color-box ${color_name.toLowerCase()}`)[0];
+    a.classList.add('flash')
+    setTimeout(function () { a.classList.remove('flash') }, 100);
+  }
+
+  function cancelGame() {
+    document.getElementsByClassName('score-board')[0].innerHTML = 'Welcome! Press start button to play.'
+    document.getElementsByClassName('game-action-start-btn')[0].style.display = "inline-block";
+    document.getElementsByClassName('game-action-cancel-btn')[0].style.display = "none";
+    document.getElementsByClassName('game-action-restart-btn')[0].style.display = "none";
+    socket.close()
+  }
+
+  function restartGame() {
+    document.getElementsByClassName('game-action-start-btn')[0].style.display = "none";
+    document.getElementsByClassName('game-action-cancel-btn')[0].style.display = "none";
+    document.getElementsByClassName('game-action-restart-btn')[0].style.display = "none";
+    startGame()
+  }
 
 </script>
 
-</html>
+{% endblock %}

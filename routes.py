@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, session, redirect, request
+from flask import Blueprint, render_template, session, redirect, request, send_file
 from flask_login import login_required, login_user,logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 from datetime import datetime, timedelta
-from models import db, User, PasswordResetToken, Score
+from models import db, User, PasswordResetToken
 from fuctions import send_forget_password_mail
 
 routes = Blueprint('route', __name__)
@@ -136,12 +136,51 @@ def logout():
 @routes.route('/')
 @routes.route('/home')
 def index():
+    users = User.query.order_by(User.high_score.desc()).all()
     if current_user.is_authenticated or session.get('skipped_login'):
-        return render_template('index.html')
+        position = None
+        if current_user.is_authenticated:
+            position = users.index(current_user)
+        top3users = None
+        if len(users) > 3:
+            top3users = users[:3]
+            users = users[3:]
+        print(top3users)
+        return render_template('index.html', top3users=top3users, users=users, position=position)
     else:
         return redirect('/login')    
 
 @login_required
-@routes.route('/profile')
+@routes.route('/profile', methods=['GET', 'POST'])
 def profile():
-    return render_template('profile.html', name=current_user.name)
+    if not current_user.is_authenticated:
+        return redirect('/login')
+    if request.method == 'GET':
+        return render_template('profile.html')
+    else:
+        if 'profile_picture' in request.files and request.files['profile_picture']:
+            photo = request.files['profile_picture']
+            photo_path = f'uploads/profiles/user_{current_user.id}.{photo.filename.split(".")[-1]}'
+            photo.save(photo_path)
+            current_user.profile_picture = '/' + photo_path
+        
+        name = request.form.get('name')
+        if name:
+            current_user.name = name
+            if len(name) < 3:
+                return render_template('profile.html', error_messages={'name': 'Enter a valid name'})
+        email = request.form.get('email')
+        if email:
+            current_user.email = email
+            if len(email) < 10:
+                return render_template('profile.html', error_messages={'email': 'Enter a valid email'})
+
+        db.session.add(current_user)
+        db.session.commit()
+        return render_template('profile.html')
+
+
+from os.path import join as join_path
+@routes.route('/uploads/profiles/<file_name>')
+def download_file(file_name):
+    return send_file(join_path('uploads/profiles/', file_name))

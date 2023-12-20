@@ -7,6 +7,9 @@ class BaseConfig():
    TESTING = False
    DEBUG = False
    SECRET_KEY = os.environ.get('SECRET_KEY')
+   UPLOAD_FOLDER = '/uploads'
+   ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
+   MAX_CONTENT_LENGTH = 10 * 1000 * 1000
    MAIL_SERVER = 'smtp.sendgrid.net'
    MAIL_PORT = 587
    MAIL_USE_TLS = True
