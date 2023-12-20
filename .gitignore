@@ -14,3 +14,5 @@ __pycache__/
 
 # Mac clutters
 .DS_Store
+
+/uploads
