@@ -146,6 +146,17 @@ header {
     color: #ffffff;
 }
 
+/* ==================================== Content ==================================== */
+
+.content {
+    /* padding: 120px 100px 20px 100px;
+    text-align: center; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 /* ==================================== Form ==================================== */
 
 .form-page {
@@ -542,6 +553,7 @@ input:-webkit-autofill:focus {
     cursor: pointer;
     user-select: none;
 }
+
 .color-box:active {
     box-shadow: none;
     position: relative;
@@ -552,15 +564,19 @@ input:-webkit-autofill:focus {
 .red {
     background-color: var(--red-color-box);
 }
+
 .yellow {
     background-color: var(--yellow-color-box)
 }
+
 .green {
     background-color: var(--green-color-box);
 }
+
 .purple {
     background-color: var(--purple-color-box);
 }
+
 .flash {
     background-color: white;
     box-shadow: none;
