@@ -180,6 +180,14 @@ def profile():
         return render_template('profile.html')
 
 
+@routes.route('/about')
+def about():
+    return render_template('about.html')
+
+@routes.route('/contact')
+def contact():
+    return render_template('contact.html')
+
 from os.path import join as join_path
 @routes.route('/uploads/profiles/<file_name>')
 def download_file(file_name):

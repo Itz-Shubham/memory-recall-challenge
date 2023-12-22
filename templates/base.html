@@ -20,8 +20,8 @@
             {% if request.url_rule | string() != '/'%}
             <a href="/" class="nav-item">Home</a>
             {% endif %}
-            <a href="" class="nav-item">About</a>
-            <a href="" class="nav-item">Contact Us</a>
+            <a href="/about" class="nav-item">About</a>
+            <a href="/contact" class="nav-item">Contact Us</a>
             {% if current_user.is_anonymous and request.url_rule | string() == '/' %}
             <a href="/login" class="login-button">Login</a>
             {% elif current_user.is_authenticated and request.url_rule | string() != '/profile'%}

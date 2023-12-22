@@ -93,11 +93,11 @@
         blinkColorBox(data['new_color'])
       }
       else if (data['game_status'] == 'game_over') {
-        user_seq = [];
-        current_level = 1;
-        document.getElementsByClassName('score-board')[0].innerHTML = 'Game Over!'
+        document.getElementsByClassName('score-board')[0].innerHTML = `Game Over! Your score is ${current_level - 1}`
         document.getElementsByClassName('game-action-cancel-btn')[0].style.display = "inline-block";
         document.getElementsByClassName('game-action-restart-btn')[0].style.display = "inline-block";
+        user_seq = [];
+        current_level = 1;
       }
     })
   }
